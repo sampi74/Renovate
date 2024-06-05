@@ -17,7 +17,8 @@ def create_app(config_class='config.Config'):
     migrate.init_app(app, db)
     csrf.init_app(app)
 
-    from app import routes, models  # Importar modelos para que estén registrados con SQLAlchemy
-    app.register_blueprint(routes.bp)
+    # from app import routes, models  # Importar modelos para que estén registrados con SQLAlchemy
+    from app import models
+    # app.register_blueprint(routes.bp)
 
     return app
