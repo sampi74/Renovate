@@ -1,0 +1,1 @@
+# Define los formularios de la aplicación utilizando Flask-WTF.

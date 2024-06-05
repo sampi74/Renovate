@@ -1,0 +1,1 @@
+# Script para iniciar la aplicación.
