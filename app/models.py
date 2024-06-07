@@ -1,5 +1,7 @@
 # Define los modelos de datos utilizando SQLAlchemy u otro ORM.
-from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app import db, login_manager
 from datetime import datetime
 
 from app.enums import Talle
@@ -18,14 +20,47 @@ class RolUsuario(db.Model):
 class Usuario(db.Model):
     cod_usuario = db.Column(db.Integer, primary_key=True)
     nombre_usuario = db.Column(db.String(14), index=True, unique=True)
+    nombre = db.Column(db.String(14))
+    apellido_usuario = db.Column(db.String(14))
     contrasena_usuario = db.Column(db.String(20))
     email_usuario = db.Column(db.String(100), index=True, unique=True)
-    foto_usuario = db.Column(db.String(300))
+    foto_usuario = db.Column(db.String(300), default=None)
     fecha_nacimiento_usuario = db.Column(db.Date)
     cod_rol = db.Column(db.Integer, db.ForeignKey('rol_usuario.cod_rol'))
     mensajes_enviados = db.relationship('Mensaje', foreign_keys='Mensaje.cod_emisor', backref='emisor', lazy='dynamic')
     mensajes_recibidos = db.relationship('Mensaje', foreign_keys='Mensaje.cod_receptor', backref='receptor',
                                          lazy='dynamic')
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+
+    def is_authenticated(self):
+        return True
+
+    def __init__(self, nombre_usuario, nombre, apellido_usuario, contrasena_usuario, email_usuario, fecha_nacimiento_usuario,
+                 cod_rol):
+        self.nombre_usuario = nombre_usuario
+        self.nombre = nombre
+        self.apellido_usuario = apellido_usuario
+        self.contrasena_usuario = contrasena_usuario
+        self.email_usuario = email_usuario
+        self.fecha_nacimiento_usuario = fecha_nacimiento_usuario
+        self.cod_rol = cod_rol
+
+    def get_id(self):
+        return str(self.cod_usuario)
+
+    def set_password(self, password):
+        self.contrasena_usuario = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.contrasena_usuario, password)
+
+    def __repr__(self):
+        return f'<Usuario {self.nombre_usuario}>'
+
+
+@login_manager.user_loader
+def cargar_usuario(cod_usuario):
+    return Usuario.query.get(int(cod_usuario))
 
 
 class Direccion(db.Model):
@@ -56,6 +91,27 @@ class Provincia(db.Model):
         self.fecha_baja_provincia = datetime.utcnow().date()
 
 
+class Categoria(db.Model):
+    cod_categoria = db.Column(db.Integer, primary_key=True)
+    nombre_categoria = db.Column(db.String(100), index=True, unique=True)
+    fecha_baja_categoria = db.Column(db.Date, default=None)
+    subcategorias = db.relationship('Subcategoria', backref='categoria_relacionada', lazy='dynamic')
+
+    def dar_de_baja(self):
+        self.fecha_baja_categoria = datetime.utcnow().date()
+
+
+class Subcategoria(db.Model):
+    cod_subcategoria = db.Column(db.Integer, primary_key=True)
+    nombre_subcategoria = db.Column(db.String(100), index=True, unique=True)
+    fecha_baja_subcategoria = db.Column(db.Date, default=None)
+    publicaciones = db.relationship('Publicacion', backref='subcategoria', lazy='dynamic')
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categoria.cod_categoria'))
+
+    def dar_de_baja(self):
+        self.fecha_baja_subcategoria = datetime.utcnow().date()
+
+
 class Publicacion(db.Model):
     cod_publicacion = db.Column(db.Integer, primary_key=True)
     nombre_publicacion = db.Column(db.String(100), index=True)
@@ -67,26 +123,6 @@ class Publicacion(db.Model):
     foto_publicacion = db.Column(db.String(300))
     cod_subcategoria = db.Column(db.Integer, db.ForeignKey('subcategoria.cod_subcategoria'))
     mensajes = db.relationship('Mensaje', backref='publicacion', lazy='dynamic')
-
-
-class Subcategoria(db.Model):
-    cod_subcategoria = db.Column(db.Integer, primary_key=True)
-    nombre_subcategoria = db.Column(db.String(100), index=True, unique=True)
-    fecha_baja_subcategoria = db.Column(db.Date, default=None)
-    publicaciones = db.relationship('Publicacion', backref='subcategoria', lazy='dynamic')
-
-    def dar_de_baja(self):
-        self.fecha_baja_subcategoria = datetime.utcnow().date()
-
-
-class Categoria(db.Model):
-    cod_categoria = db.Column(db.Integer, primary_key=True)
-    nombre_categoria = db.Column(db.String(100), index=True, unique=True)
-    fecha_baja_categoria = db.Column(db.Date, default=None)
-    subcategorias = db.relationship('Subcategoria', backref='categoria', lazy='dynamic')
-
-    def dar_de_baja(self):
-        self.fecha_baja_categoria = datetime.utcnow().date()
 
 
 class Mensaje(db.Model):

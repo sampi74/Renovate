@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Khula:wght@600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                renovate
+            </div>
+        </div>
+        <form method="post" action="" class="frame-20">
+            <div class="frame-18">
+                <div class="frame-8">
+                    <div class="rectangle-9">
+                    </div>
+                    <div class="notis">
+                        <span class="texto">
+                            Agregar Foto
+                        </span>
+                    </div>
+                </div>
+                <div class="frame-17">
+                    {{ form.hidden_tag() }}
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre..." class="dorpdown-3 categoria-3">  
+                    <input type="text" id="apellido_usuario" name="apellido_usuario" placeholder="Apellido..." class="dorpdown categoria">
+                    <input type="text" id="nombre_usuario" name="nombre_usuario" placeholder="Nombre Usuario..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="contrasena_usuario" name="contrasena_usuario" placeholder="Contraseña..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="repetir_contrasena" name="repetir_contrasena" placeholder="Repetir Contraseña..." class="dorpdown-3 categoria-1">
+                    <input type="email" id="email_usuario" name="email_usuario" placeholder="Email..." class="dorpdown-3 categoria-1">
+                    <input type="date" id="fecha_nacimiento_usuario" name="fecha_nacimiento_usuario" placeholder="Fecha Nacimiento..." class="dorpdown-3 categoria-1">
+                </div>
+            </div>
+            <div class="frame-19">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Registrarse" class="dorpdown-7 categoria-7">
+                <p class="ya-tienes-una-cuenta-inicia-sesion">
+                    <span class="ya-tienes-una-cuenta-inicia-sesion-sub-8">¿Ya tienes una cuenta? </span><span></span> <a class="link" href="{{ url_for('renovate.login') }}">Iniciar Sesion</a>
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+</body>
+</html>

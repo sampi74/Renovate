@@ -1,0 +1,221 @@
+.registro {
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 42px;
+  box-sizing: border-box;
+}
+.registro .frame-8 {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  box-sizing: border-box;
+}
+.registro .rectangle-9 {
+  border-radius: 135px;
+  border: 3px solid #95928F;
+  background: #FFFFFF;
+  margin-bottom: 12px;
+  width: 120px;
+  height: 120px;
+}
+.registro .notis {
+  border-radius: 9px;
+  border: 1.5px solid #95928F;
+  margin: 0 2.5px;
+  display: flex;
+  padding: 6px 10.8px 6px 10.5px;
+  box-sizing: border-box;
+}
+.registro .barra-inicio {
+  border-bottom: 2px solid #95928F;
+  margin-bottom: 37px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px 0 6px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.registro .dorpdown {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 1.3px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-1 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 3.4px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-2 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 2px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-3 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 1.2px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-4 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 3.5px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-5 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  margin-bottom: 12px;
+  display: flex;
+  padding: 7.2px 0 6.2px 0.8px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .dorpdown-6 {
+  border-radius: 10.8px;
+  border: 1.8px solid #95928F;
+  display: flex;
+  padding: 7.2px 0 6.2px 3.1px;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .frame-17 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .frame-18 {
+  margin: 0 8px 17px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 237.6px;
+  box-sizing: border-box;
+}
+.registro .ya-tienes-una-cuenta-inicia-sesion {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14px;
+  color: #000000;
+}
+.ya-tienes-una-cuenta-inicia-sesion {
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.333;
+  color: #316DC7;
+}
+.ya-tienes-una-cuenta-inicia-sesion-sub8 {
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.333;
+}
+.registro .frame-19 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  box-sizing: border-box;
+}
+.registro .dorpdown-7 {
+  border-radius: 10.8px;
+  border: 1.8px solid #316DC7;
+  background: #316DC7;
+  margin: 0 3.8px 21px 4.2px;
+  padding: 7.2px 0.6px 7.2px 0;
+  width: 237.6px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.registro .frame-20 {
+  margin-left: 0.6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  box-sizing: border-box;
+}
+.registro .texto {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 400;
+  font-size: 15px;
+  color: #8A8989;
+}
+.registro .replay-svgrepo-com {
+  width: 50px;
+  height: 50px;
+}
+.registro .renovate {
+  margin: 6px 0;
+  display: inline-block;
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 32px;
+  color: #316DC7;
+}
+.registro .categoria {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14.4px;
+  color: #8A8989;
+  text-align: center;
+}
+.registro .categoria-1 {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14.4px;
+  color: #8A8989;
+  text-align: center;
+}
+.registro .categoria-3 {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 14.4px;
+  color: #8A8989;
+  text-align: center;
+}
+.registro .categoria-7 {
+  overflow-wrap: break-word;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+}
+.link {
+  font-family: 'Rubik';
+  color: #316DC7;
+  text-decoration: none;
+}
