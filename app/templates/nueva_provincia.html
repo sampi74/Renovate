@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Provincia</title>
+<body>
+    <h1>Nueva Provincia</h1>
+    <form method="post" action="">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.nombre_provincia.label }}<br>
+            {{ form.nombre_provincia(size=32) }}<br>
+            {% for error in form.nombre_provincia.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    <a href="{{ url_for('renovate.listar_provincias') }}">Volver al listado de provincias</a>
+</body>
+</html>

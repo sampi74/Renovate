@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Nueva Localidad</title>
+</head>
+<body>
+    <h1>Agregar Nueva Localidad</h1>
+    <form method="post" action="{{ url_for('renovate.agregar_localidad', cod_provincia=cod_provincia) }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.nombre_localidad.label }}<br>
+            {{ form.nombre_localidad(size=32) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    <a href="{{ url_for('renovate.listar_localidades', cod_provincia=cod_provincia) }}">Volver al listado de localidades</a>
+</body>
+</html>

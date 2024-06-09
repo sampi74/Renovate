@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provincias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Listado de Provincias</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre de la Provincia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for provincia in provincias %}
+                <tr>
+                    <td>{{ provincia.cod_provincia }}</td>
+                    <td>{{ provincia.nombre_provincia }}</td>
+                    <td>
+                        <a href="{{ url_for('renovate.listar_localidades', cod_provincia=provincia.cod_provincia) }}">Ver Localidades</a>
+                        <form action="{{ url_for('renovate.baja_provincia', cod_provincia=provincia.cod_provincia) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit">Dar de Baja</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('renovate.nueva_provincia') }}" class="btn btn-primary">Agregar Nueva Provincia</a>
+</body>
+</html>
+

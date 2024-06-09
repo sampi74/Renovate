@@ -17,10 +17,10 @@
 .registro .rectangle-9 {
   border-radius: 135px;
   border: 3px solid #95928F;
-  background: #FFFFFF;
   margin-bottom: 12px;
   width: 120px;
   height: 120px;
+  overflow: hidden;
 }
 .registro .notis {
   border-radius: 9px;
@@ -218,4 +218,12 @@
   font-family: 'Rubik';
   color: #316DC7;
   text-decoration: none;
+}
+.file-input {
+    display: none; /* Oculta el input de archivo */
+}
+#foto-preview {
+    width: 100%; /* Ajusta el tamaño de la imagen para que se ajuste al círculo */
+    height: 100%; /* Ajusta el tamaño de la imagen para que se ajuste al círculo */
+    object-fit: cover; /* Ajusta la imagen para que se ajuste al contenedor sin deformarla */
 }

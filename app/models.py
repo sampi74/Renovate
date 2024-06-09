@@ -35,16 +35,6 @@ class Usuario(db.Model):
     def is_authenticated(self):
         return True
 
-    def __init__(self, nombre_usuario, nombre, apellido_usuario, contrasena_usuario, email_usuario, fecha_nacimiento_usuario,
-                 cod_rol):
-        self.nombre_usuario = nombre_usuario
-        self.nombre = nombre
-        self.apellido_usuario = apellido_usuario
-        self.contrasena_usuario = contrasena_usuario
-        self.email_usuario = email_usuario
-        self.fecha_nacimiento_usuario = fecha_nacimiento_usuario
-        self.cod_rol = cod_rol
-
     def get_id(self):
         return str(self.cod_usuario)
 
