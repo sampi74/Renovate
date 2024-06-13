@@ -12,7 +12,8 @@
             <tr>
                 <th>ID</th>
                 <th>Nombre de la Localidad</th>
-                <th>Acciones</th>
+                <th>Modificacion</th>
+                <th>Baja</th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +21,7 @@
                 <tr>
                     <td>{{ localidad.cod_localidad }}</td>
                     <td>{{ localidad.nombre_localidad }}</td>
+                    <td><a href="{{ url_for('renovate.modificar_localidad', cod_provincia=provincia.cod_provincia, cod_localidad=localidad.cod_localidad) }}">Modificar Localidad</a></td>
                     <td>
                         <form action="{{ url_for('renovate.dar_baja_localidad', cod_localidad=localidad.cod_localidad) }}" method="post" style="display:inline;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

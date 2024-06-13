@@ -31,6 +31,8 @@ class Usuario(db.Model):
     mensajes_recibidos = db.relationship('Mensaje', foreign_keys='Mensaje.cod_receptor', backref='receptor',
                                          lazy='dynamic')
     is_active = db.Column(db.Boolean, nullable=False, default=True)
+    direccion = db.relationship('Direccion', uselist=False, back_populates='usuario')
+
 
     def is_authenticated(self):
         return True
@@ -58,6 +60,8 @@ class Direccion(db.Model):
     calle_direccion = db.Column(db.String(100), index=True)
     numero_direccion = db.Column(db.Integer)
     cod_localidad = db.Column(db.Integer, db.ForeignKey('localidad.cod_localidad'))
+    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuario.cod_usuario'))
+    usuario = db.relationship('Usuario', back_populates='direccion')
 
 
 class Localidad(db.Model):

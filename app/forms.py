@@ -2,7 +2,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, DateField
-from wtforms.validators import DataRequired, Length, EqualTo
+from wtforms.fields.choices import SelectField
+from wtforms.validators import DataRequired, Length, EqualTo, Email, Optional
+
+from app.models import Provincia, Localidad
 
 
 class LoginForm(FlaskForm):
@@ -20,6 +23,10 @@ class RegisterForm(FlaskForm):
     email_usuario = StringField('email_usuario', validators=[DataRequired()])
     fecha_nacimiento_usuario = DateField('fecha_nacimiento_usuario', validators=[DataRequired()])
     foto_usuario = FileField('Foto de Perfil', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    calle_direccion = StringField('Calle', validators=[DataRequired()])
+    numero_direccion = StringField('Número', validators=[DataRequired()])
+    provincia = SelectField('Provincia', validators=[DataRequired()], choices=[])
+    cod_localidad = SelectField('Localidad', validators=[DataRequired()], choices=[])
     submit = SubmitField('Iniciar sesión')
 
 
@@ -31,3 +38,23 @@ class ProvinciaForm(FlaskForm):
 class LocalidadForm(FlaskForm):
     nombre_localidad = StringField('Nombre de la Localidad', validators=[DataRequired()])
     submit = SubmitField('Agregar Localidad')
+
+
+class UpdateUserForm(FlaskForm):
+    email = StringField('Email', validators=[Optional()])
+    password = PasswordField('New Password', validators=[
+        Optional(),
+        EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password', validators=[Optional()])
+    foto_usuario = FileField('Profile Picture', validators=[Optional()])
+    # Campos de dirección
+    calle = StringField('Calle', validators=[DataRequired()])
+    numero = StringField('Número', validators=[DataRequired()])
+    provincia = SelectField('Provincia', coerce=int, validators=[DataRequired()])
+    localidad = SelectField('Localidad', coerce=int, validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateUserForm, self).__init__(*args, **kwargs)
+        self.provincia.choices = [(prov.cod_provincia, prov.nombre_provincia) for prov in Provincia.query.all()]
+        self.localidad.choices = [(loc.cod_localidad, loc.nombre_localidad) for loc in Localidad.query.all()]

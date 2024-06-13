@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="{{ url_for('static', filename='images/generales/logo.svg') }}" />
+            <div class="renovate">
+                Editar Perfil
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('renovate.editar_perfil') }}" enctype="multipart/form-data" class="frame-20">
+            {{ form.hidden_tag() }}
+            <div class="frame-18">
+                <div class="frame-8">
+                    <div class="rectangle-9">
+                        <img id="foto-preview" src="{{ url_for('renovate.fotos_perfil', filename=current_user.foto_usuario.split('\\')[-1]) }}" alt="Current Profile Picture">
+                    </div>
+                    <input type="file" id="foto_usuario" name="foto_usuario" class="file-input" accept="image/*">
+                    <label for="foto_usuario" class="notis texto">Cambiar Foto</label>
+                </div>
+                <div class="frame-17">
+                    <input type="email" id="email_usuario" name="email_usuario" placeholder="Email..." class="dorpdown-3 categoria-1" value="{{ form.email.data }}">
+                    <input type="password" id="contrasena_usuario" name="contrasena_usuario" placeholder="Nueva Contraseña..." class="dorpdown-3 categoria-1">
+                    <input type="password" id="repetir_contrasena" name="repetir_contrasena" placeholder="Repetir Nueva Contraseña..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="calle" name="calle" placeholder="Calle..." class="dorpdown-3 categoria-1" value="{{ form.calle.data }}">
+                    <input type="text" id="numero" name="numero" placeholder="Número..." class="dorpdown-3 categoria-1" value="{{ form.numero.data }}">
+                    <select id="provincia" name="provincia" class="dorpdown-3 categoria-1">
+                        {% for provincia in provincias %}
+                            <option value="{{ provincia.cod_provincia }}" {% if provincia.cod_provincia == form.provincia.data %}selected{% endif %}>
+                                {{ provincia.nombre_provincia }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <select id="localidad" name="localidad" class="dorpdown-3 categoria-1">
+                        {% for localidad in localidades %}
+                            <option value="{{ localidad.cod_localidad }}" {% if localidad.cod_localidad == form.localidad.data %}selected{% endif %}>
+                                {{ localidad.nombre_localidad }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="frame-19">
+                <input type="submit" value="Actualizar Perfil" class="dorpdown-7 categoria-7">
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('foto_usuario').addEventListener('change', function(event) {
+            var output = document.getElementById('foto-preview');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        });
+
+        $('#provincia').change(function() {
+            var cod_provincia = $(this).val();
+            if (cod_provincia) {
+                $.ajax({
+                    url: "{{ url_for('renovate.get_localidades', cod_provincia=0) }}".replace('0', cod_provincia),
+                    method: 'GET',
+                    success: function(data) {
+                        var localidadSelect = $('#localidad');
+                        localidadSelect.empty();
+                        data.forEach(function(localidad) {
+                            localidadSelect.append(new Option(localidad.nombre_localidad, localidad.cod_localidad));
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

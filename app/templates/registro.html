@@ -1,33 +1,31 @@
-{% extends "base.html" %}
-
-{% block content %}
 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro.css') }}">
+    <link rel="stylesheet" href="../static/css/registro.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Khula:wght@600&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="registro">
         <div class="barra-inicio">
             <img class="replay-svgrepo-com" src="{{ url_for('static', filename='images/generales/logo.svg') }}" />
             <div class="renovate">
-                renovate
+                Registro
             </div>
         </div>
-        <form method="post" action="" enctype="multipart/form-data" class="frame-20">
+        <form method="post" action="{{ url_for('renovate.registro') }}" enctype="multipart/form-data" class="frame-20">
             {{ form.hidden_tag() }}
             <div class="frame-18">
                 <div class="frame-8">
                     <div class="rectangle-9">
-                        <img id="foto-preview" src="" >
+                        <img id="foto-preview" src="">
                     </div>
                     <input type="file" id="foto_usuario" name="foto_usuario" class="file-input" accept="image/*">
                     <label for="foto_usuario" class="notis texto">Agregar Foto</label>
@@ -40,40 +38,57 @@
                     <input type="password" id="repetir_contrasena" name="repetir_contrasena" placeholder="Repetir Contraseña..." class="dorpdown-3 categoria-1">
                     <input type="email" id="email_usuario" name="email_usuario" placeholder="Email..." class="dorpdown-3 categoria-1">
                     <input type="date" id="fecha_nacimiento_usuario" name="fecha_nacimiento_usuario" placeholder="Fecha Nacimiento..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="calle" name="calle" placeholder="Calle..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="numero" name="numero" placeholder="Número..." class="dorpdown-3 categoria-1">
+                    <select id="provincia" name="provincia" class="dorpdown-3 categoria-1">
+                        <option value="">Seleccione Provincia</option>
+                        {% for provincia in provincias %}
+                            <option value="{{ provincia.cod_provincia }}">{{ provincia.nombre_provincia }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="localidad" name="localidad" class="dorpdown-3 categoria-1">
+                        <option value="">Seleccione Localidad</option>
+                    </select>
                 </div>
             </div>
             <div class="frame-19">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="submit" value="Registrarse" class="dorpdown-7 categoria-7">
                 <p class="ya-tienes-una-cuenta-inicia-sesion">
-                    <span class="ya-tienes-una-cuenta-inicia-sesion-sub-8">¿Ya tienes una cuenta? </span><span></span> <a class="link" href="{{ url_for('renovate.login') }}">Iniciar Sesion</a>
+                    <span class="ya-tienes-una-cuenta-inicia-sesion-sub-8">¿Ya tienes una cuenta? </span><span></span> <a class="link" href="{{ url_for('renovate.login') }}">Iniciar Sesión</a>
                 </p>
             </div>
         </form>
     </div>
-
     <script>
-    console.log('JavaScript is loaded');
-    document.getElementById('foto_usuario').addEventListener('change', function(event) {
-        console.log('File input changed');
-        const file = event.target.files[0];
-        if (file) {
-            console.log('File selected:', file.name);
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('FileReader loaded');
-                const img = document.getElementById('foto-preview');
-                img.src = e.target.result;
-                img.style.display = 'block';
-                console.log('Image source set to:', img.src);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            console.log('No file selected');
-        }
-    });
+        document.getElementById('foto_usuario').addEventListener('change', function(event) {
+            var output = document.getElementById('foto-preview');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        });
 
+        $('#provincia').change(function() {
+            var cod_provincia = $(this).val();
+            if (cod_provincia) {
+                $.ajax({
+                    url: "{{ url_for('renovate.get_localidades', cod_provincia=0) }}".replace('0', cod_provincia),
+                    method: 'GET',
+                    success: function(data) {
+                        var localidadSelect = $('#localidad');
+                        localidadSelect.empty();
+                        data.forEach(function(localidad) {
+                            localidadSelect.append(new Option(localidad.nombre_localidad, localidad.cod_localidad));
+                        });
+                    },
+                    error: function() {
+                        console.error("Error al obtener localidades");
+                    }
+                });
+            } else {
+                // Vaciar el select de localidades si no se ha seleccionado ninguna provincia
+                $('#localidad').empty();
+                $('#localidad').append('<option value="">Seleccione Localidad</option>');
+            }
+        });
     </script>
 </body>
 </html>
-{% endblock %}
+

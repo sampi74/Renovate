@@ -12,7 +12,9 @@
             <tr>
                 <th>ID</th>
                 <th>Nombre de la Provincia</th>
-                <th>Acciones</th>
+                <th>Localidades</th>
+                <th>Modificar</th>
+                <th>Baja</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +24,11 @@
                     <td>{{ provincia.nombre_provincia }}</td>
                     <td>
                         <a href="{{ url_for('renovate.listar_localidades', cod_provincia=provincia.cod_provincia) }}">Ver Localidades</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('renovate.modificar_provincia', cod_provincia=provincia.cod_provincia) }}">Modificar Provincia</a>
+                    </td>
+                    <td>
                         <form action="{{ url_for('renovate.baja_provincia', cod_provincia=provincia.cod_provincia) }}" method="post" style="display:inline;">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit">Dar de Baja</button>
