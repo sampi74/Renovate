@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Subcategorías</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Listado de Subcategorías
+            </div>
+        </div>
+        <div class="frame-20">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre Subcategoría</th>
+                        <th>Categoría</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
+                        <th>Subcategorías</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subcategoria in subcategorias %}
+                    <tr>
+                        <td>{{ subcategoria.nombre_subcategoria }}</td>
+                        <td>{{ subcategoria.categoria_relacionada.nombre_categoria }}</td>
+                        <td><a href="{{ url_for('modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Modificar</a></td>
+                        <td><a href="{{ url_for('eliminar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Eliminar</a></td>
+                        <td><a href="{{ url_for('ver_subcategorias', cod_categoria=subcategoria.cod_categoria) }}">Ver Subcategorías</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('agregar_subcategoria') }}" class="btn btn-primary">Agregar Nueva Subcategoría</a>
+        </div>
+    </div>
+</body>
+</html>

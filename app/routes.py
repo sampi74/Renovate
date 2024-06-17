@@ -358,3 +358,109 @@ def get_localidades(cod_provincia):
     localidades = Localidad.query.filter_by(cod_provincia=cod_provincia).all()
     localidades_list = [{"cod_localidad": loc.cod_localidad, "nombre_localidad": loc.nombre_localidad} for loc in localidades]
     return jsonify(localidades_list)
+
+
+@bp.route('/crear_categoria', methods=['GET', 'POST'])
+def crear_categoria():
+    form = CategoriaForm()
+    if form.validate_on_submit():
+        nueva_categoria = Categoria(nombre_categoria=form.nombre_categoria.data)
+        db.session.add(nueva_categoria)
+        db.session.commit()
+        flash('Categoría creada con éxito!')
+        return redirect(url_for('crear_categoria'))
+    return render_template('crear_categoria.html', form=form)
+
+
+@bp.route('/categorias', methods=['GET'])
+def listar_categorias():
+    categorias = Categoria.query.filter(Categoria.fecha_baja_categoria.is_(None)).all()
+    return render_template('listar_categorias.html', categorias=categorias)
+
+
+@bp.route('/categorias/modificar/<int:cod_categoria>', methods=['GET', 'POST'])
+def modificar_categoria(cod_categoria):
+    categoria = Categoria.query.get_or_404(cod_categoria)
+    if request.method == 'POST':
+        nombre_categoria = request.form['nombre_categoria']
+        if nombre_categoria:
+            categoria.nombre_categoria = nombre_categoria
+            db.session.commit()
+            flash('Categoría actualizada correctamente', 'success')
+            return redirect(url_for('listar_categorias'))
+        else:
+            flash('El nombre de la categoría no puede estar vacío', 'danger')
+    return render_template('modificar_categoria.html', categoria=categoria)
+
+
+@bp.route('/categorias/eliminar/<int:cod_categoria>', methods=['POST'])
+def eliminar_categoria(cod_categoria):
+    categoria = Categoria.query.get_or_404(cod_categoria)
+    categoria.fecha_baja_categoria = db.func.current_date()
+    db.session.commit()
+    flash('Categoría eliminada correctamente', 'success')
+    return redirect(url_for('listar_categorias'))
+
+
+@bp.route('/categorias/<int:cod_categoria>/subcategorias', methods=['GET'])
+def listar_subcategorias_categorias(cod_categoria):
+    categoria = Categoria.query.get_or_404(cod_categoria)
+    subcategorias = Subcategoria.query.filter_by(cod_categoria=cod_categoria).all()
+    return render_template('listar_subcategorias_categoria.html', categoria=categoria, subcategorias=subcategorias)
+
+
+@bp.route('/subcategorias/agregar', methods=['GET', 'POST'])
+def agregar_subcategoria():
+    form = SubcategoriaForm()
+    if form.validate_on_submit():
+        nombre_subcategoria = form.nombre_subcategoria.data
+        categorias = form.categorias.data
+
+        for cod_categoria in categorias:
+            categoria = Categoria.query.get(cod_categoria)
+            if not categoria:
+                flash(f'La categoría con ID {cod_categoria} no existe.', 'danger')
+                continue
+
+            nueva_subcategoria = Subcategoria(
+                nombre_subcategoria=nombre_subcategoria,
+                cod_categoria=cod_categoria
+            )
+            db.session.add(nueva_subcategoria)
+
+        db.session.commit()
+        flash('Subcategoría agregada correctamente a las categorías seleccionadas.', 'success')
+        return redirect(url_for('listar_categorias'))
+
+    return render_template('agregar_subcategoria.html', form=form)
+
+
+@bp.route('/subcategorias')
+def listar_subcategorias():
+    subcategorias = Subcategoria.query.filter(Subcategoria.fecha_baja_subcategoria.is_(None)).all()
+    return render_template('listar_subcategorias.html', subcategorias=subcategorias)
+
+
+@bp.route('/modificar_subcategoria/<int:cod_subcategoria>', methods=['GET', 'POST'])
+def modificar_subcategoria(cod_subcategoria):
+    subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
+    form = SubcategoriaForm(obj=subcategoria)
+    form.categorias.choices = [(c.cod_categoria, c.nombre_categoria) for c in Categoria.query.all()]
+
+    if form.validate_on_submit():
+        subcategoria.nombre_subcategoria = form.nombre_subcategoria.data
+        subcategoria.cod_categoria = form.categorias.data
+        db.session.commit()
+        flash('Subcategoría actualizada exitosamente', 'success')
+        return redirect(url_for('listar_subcategorias'))
+
+    return render_template('modificar_subcategoria.html', form=form, subcategoria=subcategoria)
+
+
+@bp.route('/eliminar_subcategoria/<int:cod_subcategoria>', methods=['POST'])
+def eliminar_subcategoria(cod_subcategoria):
+    subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
+    subcategoria.fecha_baja_subcategoria = date.today()
+    db.session.commit()
+    flash('Subcategoría eliminada (fecha de baja asignada) exitosamente', 'success')
+    return redirect(url_for('listar_subcategorias'))

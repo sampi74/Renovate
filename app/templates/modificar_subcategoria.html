@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Subcategoría</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Modificar Subcategoría
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}" class="frame-20">
+            {{ form.hidden_tag() }}
+            <div class="frame-18">
+                <div class="frame-8">
+                    <label for="nombre_subcategoria">Nombre de la Subcategoría</label>
+                    <input type="text" id="nombre_subcategoria" name="nombre_subcategoria" value="{{ form.nombre_subcategoria.data }}" class="dorpdown-3 categoria-1">
+                </div>
+                <div class="frame-17">
+                    <label for="categorias">Categorías</label>
+                    <select id="categorias" name="categorias" class="dorpdown-3 categoria-1">
+                        {% for categoria in form.categorias.choices %}
+                            <option value="{{ categoria[0] }}" {% if categoria[0] == form.categorias.data %}selected{% endif %}>
+                                {{ categoria[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="frame-19">
+                <input type="submit" value="Actualizar Subcategoría" class="dorpdown-7 categoria-7">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

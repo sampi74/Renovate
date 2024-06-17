@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subcategorías de {{ categoria.nombre_categoria }}</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Subcategorías de {{ categoria.nombre_categoria }}
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de la Subcategoría</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subcategoria in subcategorias %}
+                    <tr>
+                        <td>{{ subcategoria.cod_subcategoria }}</td>
+                        <td>{{ subcategoria.nombre_subcategoria }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('listar_categorias') }}">Volver a Categorías</a>
+    </div>
+</body>
+</html>

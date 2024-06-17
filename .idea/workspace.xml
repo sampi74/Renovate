@@ -4,19 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ee28170-3097-4c35-bf73-5a625cdc1fb3" name="Changes" comment="commit 9/6 carga imagenes y ab localidad y provincia">
-      <change afterPath="$PROJECT_DIR$/app/templates/editar_perfil.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/modificar_localidad.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/modificar_provincia.html" afterDir="false" />
+    <list default="true" id="0ee28170-3097-4c35-bf73-5a625cdc1fb3" name="Changes" comment="commit 9/6 agrego direccion a usuario">
+      <change afterPath="$PROJECT_DIR$/app/templates/agregar_subcategoria.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/crear_categoria.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/listar_categorias.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/listar_subcategorias.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/listar_subcategorias_categoria.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/modificar_categoria.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/modificar_subcategoria.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/listar_localidades.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/listar_localidades.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/listar_provincias.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/listar_provincias.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/editar_perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/editar_perfil.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/registro.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/registro.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,15 +55,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.metodos_demanda.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Seminario/Renovate_2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.metodos_demanda.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Seminario/Renovate_2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Seminario\Renovate\app" />
@@ -125,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717969320113</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="commit 9/6 agrego direccion a usuario">
+      <option name="closed" value="true" />
+      <created>1718238131141</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1718238131141</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,6 +152,7 @@
     <MESSAGE value="commit 5/6" />
     <MESSAGE value="commit 7/6 login y registro" />
     <MESSAGE value="commit 9/6 carga imagenes y ab localidad y provincia" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit 9/6 carga imagenes y ab localidad y provincia" />
+    <MESSAGE value="commit 9/6 agrego direccion a usuario" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit 9/6 agrego direccion a usuario" />
   </component>
 </project>

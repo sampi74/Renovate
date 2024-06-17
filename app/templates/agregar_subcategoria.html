@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Subcategoría</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Agregar Subcategoría
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('agregar_subcategoria') }}" class="frame-20">
+            {{ form.hidden_tag() }}
+            <div class="frame-18">
+                <div class="frame-17">
+                    <input type="text" id="nombre_subcategoria" name="nombre_subcategoria" placeholder="Nombre de la Subcategoría" class="dorpdown-3 categoria-1" value="{{ form.nombre_subcategoria.data }}">
+                    <select id="categorias" name="categorias" class="dorpdown-3 categoria-1" multiple="multiple">
+                        {% for cod_categoria, nombre_categoria in form.categorias.choices %}
+                            <option value="{{ cod_categoria }}">{{ nombre_categoria }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="frame-19">
+                <input type="submit" value="Agregar Subcategoría" class="dorpdown-7 categoria-7">
+            </div>
+        </form>
+        <a href="{{ url_for('listar_categorias') }}">Volver a Categorías</a>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#categorias').select2();
+        });
+    </script>
+</body>
+</html>

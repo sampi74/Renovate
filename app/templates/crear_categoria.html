@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Categoría</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Crear Categoría
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('crear_categoria') }}">
+            {{ form.hidden_tag() }}
+            <div class="frame-18">
+                <div class="frame-17">
+                    <div class="form-group">
+                        {{ form.nombre_categoria.label }}
+                        {{ form.nombre_categoria(class="dorpdown-3 categoria-1") }}
+                    </div>
+                </div>
+            </div>
+            <div class="frame-19">
+                {{ form.submit(class="dorpdown-7 categoria-7") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>
