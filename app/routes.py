@@ -48,10 +48,12 @@ def registro():
         return redirect(url_for('renovate.index'))
 
     form = RegisterForm()
-    provincias = Provincia.query.all()
-    localidades = Localidad.query.all()
 
-    if form.validate_on_submit():
+    # Populate provincias and localidades
+    provincias = Provincia.query.all()
+    localidades = []
+
+    if request.method == 'POST' and form.validate_on_submit():
         nombre = form.nombre.data
         apellido = form.apellido_usuario.data
         nombre_usuario = form.nombre_usuario.data
@@ -60,8 +62,8 @@ def registro():
         fecha_nacimiento = form.fecha_nacimiento_usuario.data
         calle = form.calle_direccion.data
         numero = form.numero_direccion.data
-        cod_provincia = form.provincia.data
-        cod_localidad = form.cod_localidad.data
+        cod_provincia = request.form.get('provincia')
+        cod_localidad = request.form.get('localidad')
 
         # Verificar si el nombre de usuario ya existe
         if Usuario.query.filter_by(nombre_usuario=nombre_usuario).first():
@@ -94,7 +96,6 @@ def registro():
             cod_localidad=cod_localidad
         )
 
-        # Crear el objeto Usuario con la imagen de perfil (si existe)
         usuario = Usuario(
             nombre_usuario=nombre_usuario,
             nombre=nombre,
@@ -102,7 +103,7 @@ def registro():
             contrasena_usuario=contrasena_usuario,
             email_usuario=email,
             fecha_nacimiento_usuario=fecha_nacimiento,
-            foto_usuario=foto_filename,  # Ruta de la imagen guardada
+            foto_usuario=foto_filename,
             cod_rol=1,
             direccion=direccion
         )
@@ -279,6 +280,11 @@ def fotos_perfil(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 
+@bp.route('/fotos_publicacion/<filename>')
+def fotos_publicacion(filename):
+    return send_from_directory(current_app.config['FOTOS_PUBLICACION'], filename)
+
+
 @bp.route('/editar_perfil', methods=['GET', 'POST'])
 @login_required
 def editar_perfil():
@@ -368,7 +374,7 @@ def crear_categoria():
         db.session.add(nueva_categoria)
         db.session.commit()
         flash('Categoría creada con éxito!')
-        return redirect(url_for('crear_categoria'))
+        return redirect(url_for('renovate.listar_categorias'))
     return render_template('crear_categoria.html', form=form)
 
 
@@ -430,7 +436,7 @@ def agregar_subcategoria():
 
         db.session.commit()
         flash('Subcategoría agregada correctamente a las categorías seleccionadas.', 'success')
-        return redirect(url_for('listar_categorias'))
+        return redirect(url_for('renovate.listar_categorias'))
 
     return render_template('agregar_subcategoria.html', form=form)
 
@@ -444,7 +450,7 @@ def listar_subcategorias():
 @bp.route('/modificar_subcategoria/<int:cod_subcategoria>', methods=['GET', 'POST'])
 def modificar_subcategoria(cod_subcategoria):
     subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
-    form = SubcategoriaForm(obj=subcategoria)
+    form = ModificarSubcategoriaForm(obj=subcategoria)
     form.categorias.choices = [(c.cod_categoria, c.nombre_categoria) for c in Categoria.query.all()]
 
     if form.validate_on_submit():
@@ -452,7 +458,7 @@ def modificar_subcategoria(cod_subcategoria):
         subcategoria.cod_categoria = form.categorias.data
         db.session.commit()
         flash('Subcategoría actualizada exitosamente', 'success')
-        return redirect(url_for('listar_subcategorias'))
+        return redirect(url_for('renovate.listar_subcategorias'))
 
     return render_template('modificar_subcategoria.html', form=form, subcategoria=subcategoria)
 
@@ -464,3 +470,55 @@ def eliminar_subcategoria(cod_subcategoria):
     db.session.commit()
     flash('Subcategoría eliminada (fecha de baja asignada) exitosamente', 'success')
     return redirect(url_for('listar_subcategorias'))
+
+
+@bp.route('/crear_publicacion', methods=['GET', 'POST'])
+@login_required
+def crear_publicacion():
+    form = PublicacionForm()
+    categorias = Categoria.query.filter_by(fecha_baja_categoria=None).all()
+
+    if form.validate_on_submit():
+        # Manejar la subida de la foto
+        foto = form.foto_publicacion.data
+        foto_filename = secure_filename(foto.filename)
+        foto_path = os.path.join(current_app.config['FOTOS_PUBLICACION'], foto_filename)
+        foto.save(foto_path)
+
+        # Obtener la categoría seleccionada
+        cod_categoria = request.form.get('cod_categoria')
+        # Obtener la subcategoría seleccionada
+        cod_subcategoria = request.form.get('cod_subcategoria')
+
+        publicacion = Publicacion(
+            nombre_publicacion=form.nombre_publicacion.data,
+            descripcion_publicacion=form.descripcion_publicacion.data,
+            precio_publicacion=form.precio_publicacion.data,
+            talle_publicaion=form.talle_publicacion.data,
+            color_publicacion=form.color_publicacion.data,
+            foto_publicacion=foto_filename,
+            cod_subcategoria=cod_subcategoria,
+            cod_categoria=cod_categoria,
+            cod_usuario=current_user.cod_usuario,
+            cod_direccion=current_user.direccion.cod_direccion
+        )
+        db.session.add(publicacion)
+        db.session.commit()
+        flash('Publicación creada exitosamente.', 'success')
+        return redirect(url_for('renovate.mis_publicaciones'))
+
+    return render_template('publicar.html', form=form, categorias=categorias)
+
+
+@bp.route('/subcategorias/<int:cod_categoria>', methods=['GET'])
+def get_subcategorias(cod_categoria):
+    subcategorias = Subcategoria.query.filter_by(cod_categoria=cod_categoria, fecha_baja_subcategoria=None).all()
+    subcategorias_list = [{"cod_subcategoria": sub.cod_subcategoria, "nombre_subcategoria": sub.nombre_subcategoria} for sub in subcategorias]
+    return jsonify(subcategorias_list)
+
+
+@bp.route('/mis_publicaciones')
+@login_required
+def mis_publicaciones():
+    publicaciones = Publicacion.query.filter_by(cod_usuario=current_user.cod_usuario).all()
+    return render_template('mis_publicaciones.html', publicaciones=publicaciones)

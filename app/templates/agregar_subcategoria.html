@@ -16,7 +16,7 @@
                 Agregar Subcategoría
             </div>
         </div>
-        <form method="post" action="{{ url_for('agregar_subcategoria') }}" class="frame-20">
+        <form method="post" action="{{ url_for('renovate.agregar_subcategoria') }}" class="frame-20">
             {{ form.hidden_tag() }}
             <div class="frame-18">
                 <div class="frame-17">
@@ -32,7 +32,7 @@
                 <input type="submit" value="Agregar Subcategoría" class="dorpdown-7 categoria-7">
             </div>
         </form>
-        <a href="{{ url_for('listar_categorias') }}">Volver a Categorías</a>
+        <a href="{{ url_for('renovate.listar_subcategorias') }}">Volver a Subcategorías</a>
     </div>
     <script>
         $(document).ready(function() {

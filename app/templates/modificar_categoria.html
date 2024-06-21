@@ -13,7 +13,7 @@
                 Modificar Categoría
             </div>
         </div>
-        <form method="post" action="{{ url_for('modificar_categoria', cod_categoria=categoria.cod_categoria) }}">
+        <form method="post" action="{{ url_for('renovate.modificar_categoria', cod_categoria=categoria.cod_categoria) }}">
             <div class="frame-18">
                 <div class="frame-17">
                     <input type="text" id="nombre_categoria" name="nombre_categoria" placeholder="Nombre de la Categoría..." class="dorpdown-3 categoria-1" value="{{ categoria.nombre_categoria }}">

@@ -30,6 +30,7 @@ class Usuario(db.Model):
     mensajes_enviados = db.relationship('Mensaje', foreign_keys='Mensaje.cod_emisor', backref='emisor', lazy='dynamic')
     mensajes_recibidos = db.relationship('Mensaje', foreign_keys='Mensaje.cod_receptor', backref='receptor',
                                          lazy='dynamic')
+    publicaciones = db.relationship('Publicacion', backref='usuario', lazy='dynamic')
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     direccion = db.relationship('Direccion', uselist=False, back_populates='usuario')
 
@@ -62,6 +63,7 @@ class Direccion(db.Model):
     cod_localidad = db.Column(db.Integer, db.ForeignKey('localidad.cod_localidad'))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuario.cod_usuario'))
     usuario = db.relationship('Usuario', back_populates='direccion')
+    publicaciones = db.relationship('Publicacion', backref='direccion', lazy='dynamic')
 
 
 class Localidad(db.Model):
@@ -90,6 +92,7 @@ class Categoria(db.Model):
     nombre_categoria = db.Column(db.String(100), index=True, unique=True)
     fecha_baja_categoria = db.Column(db.Date, default=None)
     subcategorias = db.relationship('Subcategoria', backref='categoria_relacionada', lazy='dynamic')
+    publicaciones = db.relationship('Publicacion', backref='categoria', lazy='dynamic')
 
     def dar_de_baja(self):
         self.fecha_baja_categoria = datetime.utcnow().date()
@@ -97,7 +100,7 @@ class Categoria(db.Model):
 
 class Subcategoria(db.Model):
     cod_subcategoria = db.Column(db.Integer, primary_key=True)
-    nombre_subcategoria = db.Column(db.String(100), index=True, unique=True)
+    nombre_subcategoria = db.Column(db.String(100), index=True)
     fecha_baja_subcategoria = db.Column(db.Date, default=None)
     publicaciones = db.relationship('Publicacion', backref='subcategoria', lazy='dynamic')
     cod_categoria = db.Column(db.Integer, db.ForeignKey('categoria.cod_categoria'))
@@ -115,8 +118,11 @@ class Publicacion(db.Model):
     color_publicacion = db.Column(db.String(20), index=True)
     vendido = db.Column(db.Boolean, default=False)
     foto_publicacion = db.Column(db.String(300))
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categoria.cod_categoria'))
     cod_subcategoria = db.Column(db.Integer, db.ForeignKey('subcategoria.cod_subcategoria'))
+    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuario.cod_usuario'))
     mensajes = db.relationship('Mensaje', backref='publicacion', lazy='dynamic')
+    cod_direccion = db.Column(db.Integer, db.ForeignKey('direccion.cod_direccion'))
 
 
 class Mensaje(db.Model):

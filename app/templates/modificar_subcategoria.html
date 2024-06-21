@@ -14,7 +14,7 @@
                 Modificar Subcategoría
             </div>
         </div>
-        <form method="post" action="{{ url_for('modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}" class="frame-20">
+        <form method="post" action="{{ url_for('renovate.modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}" class="frame-20">
             {{ form.hidden_tag() }}
             <div class="frame-18">
                 <div class="frame-8">

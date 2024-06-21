@@ -22,7 +22,6 @@
                         <th>Categoría</th>
                         <th>Modificar</th>
                         <th>Eliminar</th>
-                        <th>Subcategorías</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,14 +29,13 @@
                     <tr>
                         <td>{{ subcategoria.nombre_subcategoria }}</td>
                         <td>{{ subcategoria.categoria_relacionada.nombre_categoria }}</td>
-                        <td><a href="{{ url_for('modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Modificar</a></td>
-                        <td><a href="{{ url_for('eliminar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Eliminar</a></td>
-                        <td><a href="{{ url_for('ver_subcategorias', cod_categoria=subcategoria.cod_categoria) }}">Ver Subcategorías</a></td>
+                        <td><a href="{{ url_for('renovate.modificar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Modificar</a></td>
+                        <td><a href="{{ url_for('renovate.eliminar_subcategoria', cod_subcategoria=subcategoria.cod_subcategoria) }}">Eliminar</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{{ url_for('agregar_subcategoria') }}" class="btn btn-primary">Agregar Nueva Subcategoría</a>
+            <a href="{{ url_for('renovate.agregar_subcategoria') }}" class="btn btn-primary">Agregar Nueva Subcategoría</a>
         </div>
     </div>
 </body>

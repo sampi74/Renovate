@@ -20,6 +20,17 @@
                 Registro
             </div>
         </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         <form method="post" action="{{ url_for('renovate.registro') }}" enctype="multipart/form-data" class="frame-20">
             {{ form.hidden_tag() }}
             <div class="frame-18">
@@ -38,16 +49,21 @@
                     <input type="password" id="repetir_contrasena" name="repetir_contrasena" placeholder="Repetir Contraseña..." class="dorpdown-3 categoria-1">
                     <input type="email" id="email_usuario" name="email_usuario" placeholder="Email..." class="dorpdown-3 categoria-1">
                     <input type="date" id="fecha_nacimiento_usuario" name="fecha_nacimiento_usuario" placeholder="Fecha Nacimiento..." class="dorpdown-3 categoria-1">
-                    <input type="text" id="calle" name="calle" placeholder="Calle..." class="dorpdown-3 categoria-1">
-                    <input type="text" id="numero" name="numero" placeholder="Número..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="calle" name="calle_direccion" placeholder="Calle..." class="dorpdown-3 categoria-1">
+                    <input type="text" id="numero" name="numero_direccion" placeholder="Número..." class="dorpdown-3 categoria-1">
+
                     <select id="provincia" name="provincia" class="dorpdown-3 categoria-1">
                         <option value="">Seleccione Provincia</option>
                         {% for provincia in provincias %}
                             <option value="{{ provincia.cod_provincia }}">{{ provincia.nombre_provincia }}</option>
                         {% endfor %}
                     </select>
+
                     <select id="localidad" name="localidad" class="dorpdown-3 categoria-1">
                         <option value="">Seleccione Localidad</option>
+                        {% for localidad in localidades %}
+                            <option value="{{ localidad.cod_localidad }}">{{ localidad.nombre_localidad }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -74,6 +90,7 @@
                     success: function(data) {
                         var localidadSelect = $('#localidad');
                         localidadSelect.empty();
+                        localidadSelect.append('<option value="">Seleccione Localidad</option>');
                         data.forEach(function(localidad) {
                             localidadSelect.append(new Option(localidad.nombre_localidad, localidad.cod_localidad));
                         });
@@ -83,7 +100,6 @@
                     }
                 });
             } else {
-                // Vaciar el select de localidades si no se ha seleccionado ninguna provincia
                 $('#localidad').empty();
                 $('#localidad').append('<option value="">Seleccione Localidad</option>');
             }

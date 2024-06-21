@@ -227,3 +227,44 @@
     height: 100%; /* Ajusta el tamaño de la imagen para que se ajuste al círculo */
     object-fit: cover; /* Ajusta la imagen para que se ajuste al contenedor sin deformarla */
 }
+.registro .cuadrado{
+  border-radius: 12px;
+  border: 4px solid #95928F;
+  margin-bottom: 16px;
+  width: 160px;
+  height: 160px;
+  overflow: hidden;
+}
+.menu {
+  border-top: 2px solid #95928F;
+  display: flex;
+  flex-direction: row;
+  padding: 14px 24px 16px 30.3px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.lupa {
+  margin: 0px 48.6px 0px 0;
+  display: flex;
+  width: 37.5px;
+  height: 37.5px;
+  box-sizing: border-box;
+}
+.notificaciones {
+  margin-right: 42.3px;
+  width: 50px;
+  height: 50px;
+}
+.publicar {
+  margin-right: 42.3px;
+  width: 50px;
+  height: 50px;
+}
+.perfil {
+  width: 50px;
+  height: 50px;
+}
+.vector-1 {
+  width: 50px;
+  height: 50px;
+}
