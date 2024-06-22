@@ -576,3 +576,29 @@ def enviar_mensaje(publicacion_id):
         print(f'Error in enviar_mensaje route: {e}')
         flash('Ocurrió un error inesperado.', 'error')
         return redirect(url_for('renovate.ver_publicacion', id=publicacion_id))
+
+
+@bp.route('/editar_publicacion/<int:publicacion_id>', methods=['GET', 'POST'])
+@login_required
+def editar_publicacion(publicacion_id):
+    publicacion = Publicacion.query.get_or_404(publicacion_id)
+    form = PublicacionForm(obj=publicacion)
+
+    if form.validate_on_submit():
+        form.populate_obj(publicacion)
+
+        if form.foto_publicacion.data:
+            # Guardar la nueva foto
+            filename = secure_filename(form.foto_publicacion.data.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            form.foto_publicacion.data.save(filepath)
+            publicacion.foto_publicacion = filename
+
+        db.session.commit()
+        flash('Publicación actualizada con éxito', 'success')
+        return redirect(url_for('renovate.ver_publicacion', publicacion_id=publicacion.cod_publicacion))
+
+    categorias = Categoria.query.all()
+    subcategorias = Subcategoria.query.filter_by(cod_categoria=publicacion.cod_categoria).all()
+
+    return render_template('editar_publicacion.html', form=form, publicacion=publicacion, categorias=categorias, subcategorias=subcategorias)

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Publicación</title>
+    <link rel="stylesheet" href="../static/css/registro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="registro">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Editar Publicación
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('renovate.editar_publicacion', publicacion_id=publicacion.cod_publicacion) }}" enctype="multipart/form-data" class="frame-20">
+            {{ form.hidden_tag() }}
+            <div class="frame-18">
+                <div class="frame-8">
+                    <div class="rectangle-9 cuadrado">
+                        <img id="foto-preview" src="{{ url_for('renovate.fotos_publicacion', filename=publicacion.foto_publicacion) }}" alt="Foto de la publicación">
+                    </div>
+                    <input type="file" id="foto_publicacion" name="foto_publicacion" class="file-input" accept="image/*">
+                    <label for="foto_publicacion" class="notis texto">Cambiar Foto</label>
+                </div>
+                <div class="frame-17">
+                    <input type="text" id="nombre_publicacion" name="nombre_publicacion" placeholder="Nombre Publicación..." class="dorpdown-3 categoria-3" value="{{ publicacion.nombre_publicacion }}">
+                    <select id="cod_categoria" name="cod_categoria" class="dorpdown categoria">
+                        <option value="{{ publicacion.categoria.cod_categoria }}">Seleccione Categoría</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.cod_categoria }}" {% if publicacion.cod_categoria == categoria.cod_categoria %}selected{% endif %}>{{ categoria.nombre_categoria }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="cod_subcategoria" name="cod_subcategoria" class="dorpdown-3 categoria-1">
+                        <option value="{{ publicacion.subcategoria.cod_subcategoria }}">Seleccione Subcategoría</option>
+                        {% for subcategoria in subcategorias %}
+                            <option value="{{ subcategoria.cod_subcategoria }}" {% if publicacion.cod_subcategoria == subcategoria.cod_subcategoria %}selected{% endif %}>{{ subcategoria.nombre_subcategoria }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="talle_publicacion" name="talle_publicacion" class="dorpdown-3 categoria-1">
+                        <option value="{{ publicacion.talle_publicaion.value }}">Seleccione Talle</option>
+                        {% for choice in form.talle_publicacion.choices %}
+                            <option value="{{ choice[0] }}" {% if choice[0] == publicacion.talle_publicacion %}selected{% endif %}>{{ choice[1] }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" id="color_publicacion" name="color_publicacion" placeholder="Color..." class="dorpdown-3 categoria-1" value="{{ publicacion.color_publicacion }}">
+                    <textarea id="descripcion_publicacion" name="descripcion_publicacion" placeholder="Descripción..." class="dorpdown-3 categoria-1">{{ publicacion.descripcion_publicacion }}</textarea>
+                    <input type="number" id="precio_publicacion" name="precio_publicacion" placeholder="Precio..." step="0.01" class="dorpdown-3 categoria-1" value="{{ publicacion.precio_publicacion }}">
+                </div>
+            </div>
+            <div class="frame-19">
+                <input type="submit" value="Actualizar" class="dorpdown-7 categoria-7">
+            </div>
+        </form>
+        <div class="menu">
+            <div class="lupa">
+                <img class="vector-1" src="../static/images/generales/lupa.svg" />
+            </div>
+            <img class="publicar" src="../static/images/generales/publicar.svg" />
+            <img class="notificaciones" src="../static/images/generales/notificaciones.svg" />
+            <img class="perfil" src="../static/images/generales/perfil_seleccionado.svg" />
+        </div>
+    </div>
+    <script>
+        document.getElementById('foto_publicacion').addEventListener('change', function(event) {
+            var output = document.getElementById('foto-preview');
+            if (event.target.files.length > 0) {
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.style.display = 'block';
+            } else {
+                output.src = '';
+                output.style.display = 'none';
+            }
+        });
+
+        $('#cod_categoria').change(function() {
+            var cod_categoria = $(this).val();
+            if (cod_categoria) {
+                $.ajax({
+                    url: "{{ url_for('renovate.get_subcategorias', cod_categoria=0) }}".replace('0', cod_categoria),
+                    method: 'GET',
+                    success: function(data) {
+                        var subcategoriaSelect = $('#cod_subcategoria');
+                        subcategoriaSelect.empty();
+                        subcategoriaSelect.append('<option value="">Seleccione Subcategoría</option>');
+                        data.forEach(function(subcategoria) {
+                            subcategoriaSelect.append(new Option(subcategoria.nombre_subcategoria, subcategoria.cod_subcategoria));
+                        });
+                    }
+                });
+            } else {
+                $('#cod_subcategoria').empty().append('<option value="">Seleccione Subcategoría</option>');
+            }
+        });
+    </script>
+</body>
+</html>
