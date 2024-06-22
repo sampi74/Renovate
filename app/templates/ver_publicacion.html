@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Publicacion</title>
+    <link rel="stylesheet" href="../static/css/ver_publicacion.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mi-perfil-mobile">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Publicacion
+            </div>
+        </div>
+        <div class="frame-38">
+            <div class="rectangle-9">
+                <img src="{{ url_for('renovate.fotos_publicacion', filename=publicacion.foto_publicacion) }}" alt="Foto de {{ publicacion.nombre_publicacion }}" class="user-image">
+            </div>
+            <div class="nombre-publicacion">
+                {{ publicacion.nombre_publicacion }}
+            </div>
+            <div class="container">
+                ${{ publicacion.precio_publicacion }}
+            </div>
+            <div class="descripcion">
+                Descripcion: {{ publicacion.descripcion_publicacion }}<br />
+            </div>
+            <div class="frame-34">
+                <span class="talle-l">
+                    Talle: {{ publicacion.talle_publicaion.value }}
+                </span>
+                <span class="color-azul">
+                    Color: {{ publicacion.color_publicacion }}
+                </span>
+            </div>
+            <div class="frame-33">
+                <div class="ellipse-1">
+                  <img src="{{ url_for('renovate.fotos_perfil', filename=publicacion.usuario.foto_usuario) }}" alt="Foto de {{ publicacion.usuario.nombre }}" class="user-image">
+                </div>
+                <div class="nombre-usuario-1">
+                    {{ publicacion.usuario.nombre_usuario }}
+                </div>
+            </div>
+            <div class="frame-35">
+                <span class="ubicacion">
+                        Provincia: {{ publicacion.direccion.localidad.provincia.nombre_provincia }}<br />
+                        Localidad: {{ publicacion.direccion.localidad.nombre_localidad }}<br />
+                        Calle: {{ publicacion.direccion.calle_direccion }}<br />
+                        Número: {{ publicacion.direccion.numero_direccion }}
+                </span>
+            </div>
+            <div class="frame-37">
+              <form action="{{ url_for('renovate.enviar_mensaje', publicacion_id=publicacion.cod_publicacion) }}" method="post">
+                  {{ form.csrf_token }}
+                  <div class="envia-un-mensaje-al-vendedor">
+                      Envia un mensaje al vendedor
+                  </div>
+                  <div class="frame-36">
+                      <textarea name="contenido_mensaje" placeholder="Escribe tu mensaje aquí" rows="4" cols="50"></textarea><br>
+                      <button type="submit">Enviar Mensaje</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="lupa">
+                <img class="vector" src="../static/images/generales/lupa.svg" />
+            </div>
+            <img class="publicar" src="../static/images/generales/publicar.svg" />
+            <img class="notificaciones" src="../static/images/generales/notificaciones.svg" />
+            <img class="perfil" src="../static/images/generales/perfil.svg" />
+        </div>
+    </div>
+</body>
+</html>

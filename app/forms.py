@@ -96,3 +96,8 @@ class PublicacionForm(FlaskForm):
     color_publicacion = StringField('Color', validators=[DataRequired(), Length(max=20)])
     foto_publicacion = FileField('Foto de la Publicación', validators=[DataRequired()])
     submit = SubmitField('Crear Publicación')
+
+
+class MensajeForm(FlaskForm):
+    contenido_mensaje = TextAreaField('Contenido del Mensaje', validators=[DataRequired()])
+    enviar = SubmitField('Enviar')

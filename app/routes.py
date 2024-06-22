@@ -1,4 +1,5 @@
 # Define las rutas (endpoints) de la aplicación.
+import urllib.parse
 from datetime import date
 import os
 
@@ -522,3 +523,56 @@ def get_subcategorias(cod_categoria):
 def mis_publicaciones():
     publicaciones = Publicacion.query.filter_by(cod_usuario=current_user.cod_usuario).all()
     return render_template('mis_publicaciones.html', publicaciones=publicaciones)
+
+
+@bp.route('/ver_publicacion/<int:id>')
+def ver_publicacion(id):
+    publicacion = Publicacion.query.get_or_404(id)
+    receptor = Usuario.query.get_or_404(publicacion.usuario.cod_usuario)  # El receptor es el dueño de la publicación
+    form = MensajeForm()  # Inicializa tu formulario aquí
+
+    return render_template('ver_publicacion.html', publicacion=publicacion, receptor=receptor, form=form)
+
+
+@bp.route('/enviar_mensaje/<int:publicacion_id>', methods=['POST'])
+@login_required
+def enviar_mensaje(publicacion_id):
+    try:
+        contenido_mensaje = request.form.get('contenido_mensaje')
+
+        if not contenido_mensaje:
+            flash('El contenido del mensaje no puede estar vacío', 'error')
+            return redirect(url_for('renovate.ver_publicacion', id=publicacion_id))
+
+        # Obtener la publicación y el receptor del mensaje
+        publicacion = Publicacion.query.get_or_404(publicacion_id)
+        receptor = Usuario.query.get_or_404(publicacion.cod_usuario)
+
+        # Preparar los datos para el correo
+        emisor_email = current_user.email_usuario
+        receptor_email = receptor.email_usuario
+        subject = f"Nuevo mensaje de {current_user.nombre} sobre tu publicación {publicacion.nombre_publicacion}"
+        body = f"""
+        Hola {receptor.nombre},
+
+        Has recibido un nuevo mensaje de {current_user.nombre} sobre tu publicación "{publicacion.nombre_publicacion}".
+
+        Mensaje:
+        {contenido_mensaje}
+
+        Puedes responder a este correo o iniciar sesión en la plataforma para responder el mensaje.
+
+        Saludos,
+        El equipo de Renovate
+        """
+
+        # Codificar el enlace mailto
+        mailto_link = f"mailto:{receptor_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+
+        # Redirigir al enlace mailto
+        return redirect(mailto_link)
+
+    except Exception as e:
+        print(f'Error in enviar_mensaje route: {e}')
+        flash('Ocurrió un error inesperado.', 'error')
+        return redirect(url_for('renovate.ver_publicacion', id=publicacion_id))
