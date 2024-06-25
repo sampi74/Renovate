@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categorias</title>
+    <link rel="stylesheet" href="../static/css/buscador.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="busqueda-1-mobile">
+        <div class="barra-inicio">
+            <img class="replay-svgrepo-com" src="../static/images/generales/logo.svg" />
+            <div class="renovate">
+                Categorias
+            </div>
+        </div>
+        <div class="frame-11">
+          <form method="post" action="{{ url_for('renovate.buscar_publicaciones') }}" class="boton-categoria">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="text" name="termino_busqueda" placeholder="Buscar..." class="buscar">
+            <button type="submit" class="buscar-boton">
+                <img class="vector-10" src="{{ url_for('static', filename='images/generales/lupa_seleccionada.svg') }}" />
+            </button>
+          </form>
+            <div class="categorias">
+                {% for categoria in categorias %}
+                <div class="boton-categoria-1">
+                    <a href="{{ url_for('renovate.subcategorias', cod_categoria=categoria.cod_categoria) }}" class="texto-prueba">
+                        {{ categoria.nombre_categoria }}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="menu">
+            <div class="lupa">
+                <a href="{{ url_for('renovate.categorias') }}">
+                    <img class="vector" src="../static/images/generales/lupa_seleccionada.svg" alt="Lupa" />
+                </a>
+            </div>
+            <a href="{{ url_for('renovate.crear_publicacion') }}">
+                <img class="publicar" src="../static/images/generales/publicar.svg" alt="Publicar" />
+            </a>
+            <a href="{{ url_for('renovate.notificaciones') }}">
+                <img class="notificaciones" src="../static/images/generales/notificaciones.svg" alt="Notificaciones" />
+            </a>
+            <a href="{{ url_for('renovate.mi_perfil') }}">
+                <img class="perfil" src="../static/images/generales/perfil.svg" alt="Perfil" />
+            </a>
+        </div>
+    </div>
+</body>
+</html>

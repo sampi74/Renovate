@@ -101,3 +101,8 @@ class PublicacionForm(FlaskForm):
 class MensajeForm(FlaskForm):
     contenido_mensaje = TextAreaField('Contenido del Mensaje', validators=[DataRequired()])
     enviar = SubmitField('Enviar')
+
+
+class RolUsuarioForm(FlaskForm):
+    nombre_rol = StringField('Nombre del Rol', validators=[DataRequired(), Length(max=14)])
+    submit = SubmitField('Crear Rol')

@@ -50,6 +50,22 @@
                 <input type="submit" value="Actualizar Perfil" class="dorpdown-7 categoria-7">
             </div>
         </form>
+        <div class="menu">
+            <div class="lupa">
+                <a href="{{ url_for('renovate.categorias') }}">
+                    <img class="vector" src="../static/images/generales/lupa.svg" alt="Lupa" />
+                </a>
+            </div>
+            <a href="{{ url_for('renovate.crear_publicacion') }}">
+                <img class="publicar" src="../static/images/generales/publicar.svg" alt="Publicar" />
+            </a>
+            <a href="{{ url_for('renovate.notificaciones') }}">
+                <img class="notificaciones" src="../static/images/generales/notificaciones.svg" alt="Notificaciones" />
+            </a>
+            <a href="{{ url_for('renovate.mi_perfil') }}">
+                <img class="perfil" src="../static/images/generales/perfil_seleccionado.svg" alt="Perfil" />
+            </a>
+        </div>
     </div>
     <script>
         document.getElementById('foto_usuario').addEventListener('change', function(event) {

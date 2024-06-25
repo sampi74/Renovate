@@ -2,6 +2,7 @@
 import urllib.parse
 from datetime import date
 import os
+from functools import wraps
 
 from flask import render_template, redirect, url_for, flash, current_app, request, send_from_directory, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
@@ -15,11 +16,62 @@ from flask import Blueprint
 bp = Blueprint('renovate', __name__)
 
 
-# Define la ruta para la página de inicio
+def rol_requerido(nombre_rol):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated:
+                flash('Necesitas iniciar sesión para acceder a esta página.', 'error')
+                return redirect(url_for('renovate.login'))
+            if current_user.rol_usuario.nombre_rol != nombre_rol:
+                flash('No tienes permiso para acceder a esta página.', 'error')
+                return redirect(url_for('renovate.categorias'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
+def roles_permitidos(*nombres_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated:
+                flash('Necesitas iniciar sesión para acceder a esta página.', 'error')
+                return redirect(url_for('renovate.login'))
+            if current_user.rol_usuario.nombre_rol not in nombres_roles:
+                flash('No tienes permiso para acceder a esta página.', 'error')
+                return redirect(url_for('renovate.categorias'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
 @bp.route('/')
-@login_required
 def index():
-    return render_template('index.html')
+    return redirect(url_for('renovate.categorias'))
+
+
+@bp.route('/crear_rol', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
+def crear_rol():
+    form = RolUsuarioForm()
+    if form.validate_on_submit():
+        nombre_rol = form.nombre_rol.data
+
+        # Verificar si el rol ya existe
+        rol_existente = RolUsuario.query.filter_by(nombre_rol=nombre_rol).first()
+        if rol_existente:
+            flash('El rol ya existe.', 'error')
+        else:
+            # Crear el nuevo rol
+            nuevo_rol = RolUsuario(nombre_rol=nombre_rol)
+            db.session.add(nuevo_rol)
+            db.session.commit()
+            flash('Rol creado exitosamente.', 'success')
+            return redirect(url_for('renovate.categorias'))  # Cambia a la ruta que desees
+
+    return render_template('crear_rol.html', form=form)
 
 
 # Define la ruta para el inicio de sesión
@@ -136,6 +188,8 @@ def logout():
 
 # rutas administrador
 @bp.route('/provincias/nueva', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def nueva_provincia():
     form = ProvinciaForm()
     if form.validate_on_submit():
@@ -163,12 +217,16 @@ def nueva_provincia():
 
 
 @bp.route('/provincias')
+@login_required
+@roles_permitidos('Administrador')
 def listar_provincias():
     provincias = Provincia.query.filter_by(fecha_baja_provincia=None).all()  # Excluye las provincias con fecha de baja
     return render_template('listar_provincias.html', provincias=provincias)
 
 
 @bp.route('/provincias/eliminar/<int:cod_provincia>', methods=['POST'])
+@login_required
+@roles_permitidos('Administrador')
 def baja_provincia(cod_provincia):
     provincia = Provincia.query.get_or_404(cod_provincia)
     try:
@@ -188,6 +246,8 @@ def baja_provincia(cod_provincia):
 
 
 @bp.route('/provincias/modificar/<int:cod_provincia>', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def modificar_provincia(cod_provincia):
     provincia = Provincia.query.get_or_404(cod_provincia)
     form = ProvinciaForm(obj=provincia)
@@ -205,6 +265,8 @@ def modificar_provincia(cod_provincia):
 
 
 @bp.route('/provincias/<int:cod_provincia>/localidades', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def listar_localidades(cod_provincia):
     provincia = Provincia.query.get_or_404(cod_provincia)
     localidades = Localidad.query.filter_by(cod_provincia=cod_provincia, fecha_baja_localidad=None).all()
@@ -226,6 +288,8 @@ def listar_localidades(cod_provincia):
 
 
 @bp.route('/provincias/<int:cod_provincia>/localidades/nueva', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def agregar_localidad(cod_provincia):
     form = LocalidadForm()
     if form.validate_on_submit():
@@ -244,6 +308,8 @@ def agregar_localidad(cod_provincia):
 
 
 @bp.route('/provincias/<int:cod_provincia>/localidades/modificar/<int:cod_localidad>', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def modificar_localidad(cod_provincia, cod_localidad):
     localidad = Localidad.query.get_or_404(cod_localidad)
     form = LocalidadForm(obj=localidad)
@@ -261,6 +327,8 @@ def modificar_localidad(cod_provincia, cod_localidad):
 
 
 @bp.route('/localidades/baja/<int:cod_localidad>', methods=['POST'])
+@login_required
+@roles_permitidos('Administrador')
 def dar_baja_localidad(cod_localidad):
     localidad = Localidad.query.get_or_404(cod_localidad)
     localidad.fecha_baja_localidad = datetime.now().date()
@@ -271,6 +339,7 @@ def dar_baja_localidad(cod_localidad):
 
 @bp.route('/perfil/')
 @login_required
+@roles_permitidos('Normal')
 def mi_perfil():
     return render_template('mi_perfil.html')
 
@@ -288,6 +357,7 @@ def fotos_publicacion(filename):
 
 @bp.route('/editar_perfil', methods=['GET', 'POST'])
 @login_required
+@roles_permitidos('Normal')
 def editar_perfil():
     form = UpdateUserForm()
     provincias = Provincia.query.all()
@@ -368,6 +438,8 @@ def get_localidades(cod_provincia):
 
 
 @bp.route('/crear_categoria', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def crear_categoria():
     form = CategoriaForm()
     if form.validate_on_submit():
@@ -379,13 +451,17 @@ def crear_categoria():
     return render_template('crear_categoria.html', form=form)
 
 
-@bp.route('/categorias', methods=['GET'])
+@bp.route('/admin/categorias', methods=['GET'])
+@login_required
+@roles_permitidos('Administrador')
 def listar_categorias():
     categorias = Categoria.query.filter(Categoria.fecha_baja_categoria.is_(None)).all()
     return render_template('listar_categorias.html', categorias=categorias)
 
 
-@bp.route('/categorias/modificar/<int:cod_categoria>', methods=['GET', 'POST'])
+@bp.route('/admin/categorias/modificar/<int:cod_categoria>', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def modificar_categoria(cod_categoria):
     categoria = Categoria.query.get_or_404(cod_categoria)
     if request.method == 'POST':
@@ -400,7 +476,9 @@ def modificar_categoria(cod_categoria):
     return render_template('modificar_categoria.html', categoria=categoria)
 
 
-@bp.route('/categorias/eliminar/<int:cod_categoria>', methods=['POST'])
+@bp.route('/admin/categorias/eliminar/<int:cod_categoria>', methods=['POST'])
+@login_required
+@roles_permitidos('Administrador')
 def eliminar_categoria(cod_categoria):
     categoria = Categoria.query.get_or_404(cod_categoria)
     categoria.fecha_baja_categoria = db.func.current_date()
@@ -409,14 +487,18 @@ def eliminar_categoria(cod_categoria):
     return redirect(url_for('listar_categorias'))
 
 
-@bp.route('/categorias/<int:cod_categoria>/subcategorias', methods=['GET'])
+@bp.route('/admin/categorias/<int:cod_categoria>/subcategorias', methods=['GET'])
+@login_required
+@roles_permitidos('Administrador')
 def listar_subcategorias_categorias(cod_categoria):
     categoria = Categoria.query.get_or_404(cod_categoria)
     subcategorias = Subcategoria.query.filter_by(cod_categoria=cod_categoria).all()
     return render_template('listar_subcategorias_categoria.html', categoria=categoria, subcategorias=subcategorias)
 
 
-@bp.route('/subcategorias/agregar', methods=['GET', 'POST'])
+@bp.route('/admin/subcategorias/agregar', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def agregar_subcategoria():
     form = SubcategoriaForm()
     if form.validate_on_submit():
@@ -442,13 +524,15 @@ def agregar_subcategoria():
     return render_template('agregar_subcategoria.html', form=form)
 
 
-@bp.route('/subcategorias')
+@bp.route('/admin/subcategorias')
 def listar_subcategorias():
     subcategorias = Subcategoria.query.filter(Subcategoria.fecha_baja_subcategoria.is_(None)).all()
     return render_template('listar_subcategorias.html', subcategorias=subcategorias)
 
 
-@bp.route('/modificar_subcategoria/<int:cod_subcategoria>', methods=['GET', 'POST'])
+@bp.route('/admin/modificar_subcategoria/<int:cod_subcategoria>', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Administrador')
 def modificar_subcategoria(cod_subcategoria):
     subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
     form = ModificarSubcategoriaForm(obj=subcategoria)
@@ -464,7 +548,9 @@ def modificar_subcategoria(cod_subcategoria):
     return render_template('modificar_subcategoria.html', form=form, subcategoria=subcategoria)
 
 
-@bp.route('/eliminar_subcategoria/<int:cod_subcategoria>', methods=['POST'])
+@bp.route('/admin/eliminar_subcategoria/<int:cod_subcategoria>', methods=['POST'])
+@login_required
+@roles_permitidos('Administrador')
 def eliminar_subcategoria(cod_subcategoria):
     subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
     subcategoria.fecha_baja_subcategoria = date.today()
@@ -475,6 +561,7 @@ def eliminar_subcategoria(cod_subcategoria):
 
 @bp.route('/crear_publicacion', methods=['GET', 'POST'])
 @login_required
+@roles_permitidos('Normal')
 def crear_publicacion():
     form = PublicacionForm()
     categorias = Categoria.query.filter_by(fecha_baja_categoria=None).all()
@@ -520,12 +607,15 @@ def get_subcategorias(cod_categoria):
 
 @bp.route('/mis_publicaciones')
 @login_required
+@roles_permitidos('Normal')
 def mis_publicaciones():
     publicaciones = Publicacion.query.filter_by(cod_usuario=current_user.cod_usuario).all()
     return render_template('mis_publicaciones.html', publicaciones=publicaciones)
 
 
 @bp.route('/ver_publicacion/<int:id>')
+@login_required
+@roles_permitidos('Normal')
 def ver_publicacion(id):
     publicacion = Publicacion.query.get_or_404(id)
     receptor = Usuario.query.get_or_404(publicacion.usuario.cod_usuario)  # El receptor es el dueño de la publicación
@@ -536,6 +626,7 @@ def ver_publicacion(id):
 
 @bp.route('/enviar_mensaje/<int:publicacion_id>', methods=['POST'])
 @login_required
+@roles_permitidos('Normal')
 def enviar_mensaje(publicacion_id):
     try:
         contenido_mensaje = request.form.get('contenido_mensaje')
@@ -547,6 +638,16 @@ def enviar_mensaje(publicacion_id):
         # Obtener la publicación y el receptor del mensaje
         publicacion = Publicacion.query.get_or_404(publicacion_id)
         receptor = Usuario.query.get_or_404(publicacion.cod_usuario)
+
+        # Crear el objeto Mensaje y guardarlo en la base de datos
+        mensaje = Mensaje(
+            contenido=contenido_mensaje,
+            emisor_id=current_user.cod_usuario,
+            receptor_id=receptor.cod_usuario,
+            publicacion_id=publicacion_id
+        )
+        db.session.add(mensaje)
+        db.session.commit()
 
         # Preparar los datos para el correo
         emisor_email = current_user.email_usuario
@@ -580,6 +681,7 @@ def enviar_mensaje(publicacion_id):
 
 @bp.route('/editar_publicacion/<int:publicacion_id>', methods=['GET', 'POST'])
 @login_required
+@roles_permitidos('Normal')
 def editar_publicacion(publicacion_id):
     publicacion = Publicacion.query.get_or_404(publicacion_id)
     form = PublicacionForm(obj=publicacion)
@@ -602,3 +704,56 @@ def editar_publicacion(publicacion_id):
     subcategorias = Subcategoria.query.filter_by(cod_categoria=publicacion.cod_categoria).all()
 
     return render_template('editar_publicacion.html', form=form, publicacion=publicacion, categorias=categorias, subcategorias=subcategorias)
+
+
+@bp.route('/categorias')
+@login_required
+@roles_permitidos('Normal')
+def categorias():
+    categorias = Categoria.query.all()
+    return render_template('buscador_categorias.html', categorias=categorias)
+
+
+@bp.route('/categorias/<int:cod_categoria>/subcategorias')
+@login_required
+@roles_permitidos('Normal')
+def subcategorias(cod_categoria):
+    subcategorias = Subcategoria.query.filter_by(cod_categoria=cod_categoria).all()
+    categoria = Categoria.query.get_or_404(cod_categoria)
+    return render_template('buscador_subcategorias.html', subcategorias=subcategorias, categoria=categoria)
+
+
+@bp.route('/publicaciones/subcategoria/<int:cod_subcategoria>')
+@login_required
+@roles_permitidos('Normal')
+def publicaciones_por_subcategoria(cod_subcategoria):
+    subcategoria = Subcategoria.query.get_or_404(cod_subcategoria)
+    publicaciones = Publicacion.query.filter_by(cod_subcategoria=cod_subcategoria).all()
+    return render_template('publicaciones_subcategoria.html', subcategoria=subcategoria, publicaciones=publicaciones)
+
+
+@bp.route('/buscar_publicaciones', methods=['GET', 'POST'])
+@login_required
+@roles_permitidos('Normal')
+def buscar_publicaciones():
+    if request.method == 'POST':
+        termino_busqueda = request.form.get('termino_busqueda')
+        if termino_busqueda:
+            publicaciones = Publicacion.query.filter(Publicacion.nombre_publicacion.ilike(f'%{termino_busqueda}%')).all()
+            return render_template('resultados_busqueda.html', publicaciones=publicaciones, termino_busqueda=termino_busqueda)
+    return redirect(url_for('categorias'))
+
+
+@bp.route('/notificaciones', methods=['GET'])
+@login_required
+@roles_permitidos('Normal')
+def notificaciones():
+    # Obtener todas las publicaciones del usuario actual
+    publicaciones_usuario = Publicacion.query.filter_by(cod_usuario=current_user.cod_usuario).all()
+
+    # Obtener todos los mensajes relacionados con las publicaciones del usuario
+    mensajes = []
+    for publicacion in publicaciones_usuario:
+        mensajes.extend(Mensaje.query.filter_by(cod_publicacion=publicacion.cod_publicacion).all())
+
+    return render_template('notificaciones.html', mensajes=mensajes)

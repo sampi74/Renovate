@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ee28170-3097-4c35-bf73-5a625cdc1fb3" name="Changes" comment="commit 22/06  &#10;termino ver publicacion">
-      <change afterPath="$PROJECT_DIR$/app/templates/editar_publicacion.html" afterDir="false" />
+    <list default="true" id="0ee28170-3097-4c35-bf73-5a625cdc1fb3" name="Changes" comment="commit 22/06  &#10;agrego editar publicacion">
+      <change afterPath="$PROJECT_DIR$/app/templates/buscador_categorias.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/editar_perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/editar_perfil.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/editar_publicacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/editar_publicacion.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/publicar.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/publicar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/ver_publicacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/ver_publicacion.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +58,7 @@
     &quot;Python.metodos_demanda.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Seminario/Renovate_2/app&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/simulacion/global&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -183,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719025524954</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="commit 22/06  &#10;agrego editar publicacion">
+      <option name="closed" value="true" />
+      <created>1719029033642</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1719029033642</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -206,6 +219,7 @@
     <MESSAGE value="commit 17/06  &#10;agrego categoria y subcategoria" />
     <MESSAGE value="commit 21/06  &#10;agrego mis publicaciones" />
     <MESSAGE value="commit 22/06  &#10;termino ver publicacion" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit 22/06  &#10;termino ver publicacion" />
+    <MESSAGE value="commit 22/06  &#10;agrego editar publicacion" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit 22/06  &#10;agrego editar publicacion" />
   </component>
 </project>
